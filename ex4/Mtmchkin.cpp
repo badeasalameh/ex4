@@ -1,7 +1,7 @@
 
 #include "Mtmchkin.h"
 #include "utilities.h"
-hahahahahahahahuhdubsfhbef;
+
 #include "Encounter.h"
 #include "Dragon.h"
 #include "Giant.h"
