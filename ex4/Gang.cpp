@@ -1,5 +1,14 @@
 #include "Gang.h"
-int Gang :: getTotalCombatPower()
+
+Gang :: Gang() : Encounter(0 , 0 , 0) , m_gangSize(0)
+{}
+
+string Gang :: getDescription() const
+{
+    return "Gang of " + to_string(m_gangSize) + "members (power " + to_string(m_combatPower) + ", loot " + to_string(m_loot) + ", damage " + to_string(m_damage) + ")";
+}
+
+int Gang :: getCombatPower() const
 {
     int tot = 0;
     for(auto& gangMember : m_gangMembers)
@@ -8,7 +17,7 @@ int Gang :: getTotalCombatPower()
     }
     return tot;
 }
-int Gang :: getTotalLoot()
+int Gang :: getLoot() const
 {
     int tot = 0;
     for(auto& gangMember : m_gangMembers)
@@ -17,7 +26,7 @@ int Gang :: getTotalLoot()
     }
     return tot;
 }
-int Gang :: getTotalDamage()
+int Gang :: getDamage() const
 {
     int tot = 0;
     for(auto& gangMember : m_gangMembers)
@@ -27,36 +36,10 @@ int Gang :: getTotalDamage()
     return tot;
 }
 
-Gang :: Gang() : Encounter(0 , 0 , 0)
+void Gang :: insertGangMember(Encounter *encounter)
 {
-    setCombatPower(getCombatPower());
-    setLoot(getLoot());
-    setDamage(getDamage());
-
-    int count = 0;
-    for(auto& gangMember : m_gangMembers)
-    {
-        count++;
-    }
-    m_gangSize = count;
-}
-
-string Gang :: getDescription() const
-{
-    return "Gang of " + to_string(m_gangSize) + "members (power " + to_string(m_combatPower) + ", loot " + to_string(m_loot) + ", damage " + to_string(m_damage) + ")";
-}
-
-int Gang :: getCombatPower() const
-{
-    return m_combatPower;
-}
-int Gang :: getLoot() const
-{
-    return m_loot;
-}
-int Gang :: getDamage() const
-{
-    return m_damage;
+    m_gangMembers.push_back(encounter);
+    m_gangSize++;
 }
 
 

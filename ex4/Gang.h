@@ -8,14 +8,12 @@ class Gang : public Encounter {
 private:
     int m_gangSize;
 public:
-    int getTotalCombatPower();
-    int getTotalLoot();
-    int getTotalDamage();
     Gang();
     string getDescription() const override;
      int getCombatPower() const override;
      int getLoot() const override;
      int getDamage() const override;
+     void insertGangMember(Encounter* encounter);
      std::vector<Encounter*> m_gangMembers;
 };
 
