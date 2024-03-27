@@ -10,6 +10,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cctype>
+
 #include "Player.h"
 #include "Card.h"
 #include "utilities.h"
@@ -27,6 +29,9 @@
 #include "Warrior.h"
 #include "Sorcerer.h"
 
+#include "InvalidCardsFile.h"
+#include "InvalidPlayersFile.h"
+
 #define POTION_COST 5
 #define POTION_HEAL 10
 #define SOLARECLIPSE_WARRIOR -1
@@ -35,6 +40,7 @@
 
 using std::string;
 using std::shared_ptr;
+using std::unique_ptr;
 using std::vector;
 using std::queue;
 using std::map;
@@ -92,4 +98,7 @@ public:
      * @return - void
     */
     void play();
+
+    class InvalidCardsFile;
+    class InvalidPlayerFile;
 };

@@ -27,4 +27,6 @@ add_executable(ex4
         Warrior.h
         Sorcerer.cpp
         Sorcerer.h
+        InvalidCardsFile.h
+        InvalidPlayersFile.h
 )
