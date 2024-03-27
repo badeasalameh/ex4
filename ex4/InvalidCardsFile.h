@@ -5,7 +5,6 @@
 #ifndef EX4_INVALIDCARDSFILE_H
 #define EX4_INVALIDCARDSFILE_H
 #include <iostream>
-#include "Mtmchkin.h"
 
 class InvalidCardsFile : public std::exception{
 private:
