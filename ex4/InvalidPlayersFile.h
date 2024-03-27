@@ -5,7 +5,6 @@
 #ifndef EX4_INVALIDPLAYERSFILE_H
 #define EX4_INVALIDPLAYERSFILE_H
 #include <iostream>
-#include "Mtmchkin.h"
 
      class InvalidPlayersFile : public std::exception {
      private:
