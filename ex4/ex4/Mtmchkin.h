@@ -6,45 +6,21 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include "Players/Player.h"
+#include "Cards/Card.h"
 #include <set>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <cctype>
 
-#include "Player.h"
-#include "Card.h"
-#include "utilities.h"
-
-#include "Encounter.h"
-#include "Dragon.h"
-#include "Giant.h"
-#include "Goblin.h"
-#include "Gang.h"
-
-#include "Event.h"
-#include "SolarEclipse.h"
-#include "PotionMerchant.h"
-
-#include "Warrior.h"
-#include "Sorcerer.h"
-
-#include "InvalidCardsFile.h"
-#include "InvalidPlayersFile.h"
+using std::string;
+using std::shared_ptr;
+using std::vector;
+using std::queue;
+using std::map;
 
 #define POTION_COST 5
 #define POTION_HEAL 10
 #define SOLARECLIPSE_WARRIOR -1
 #define SOLARECLIPSE_SORCERER 1
 #define MAX_LEVEL 10
-
-using std::string;
-using std::shared_ptr;
-using std::unique_ptr;
-using std::vector;
-using std::queue;
-using std::map;
-using std::set;
 
 class Mtmchkin{
 private:
@@ -54,11 +30,11 @@ private:
 
     map<int , shared_ptr<Player>> m_players;
     queue<shared_ptr<Card>> m_cards;
+
     vector<shared_ptr<Player>> m_finished;
     set<shared_ptr<Player> , PlayerCompareFunc> m_leaderboard;
-
     /**
-     * Plays a single turn for a player
+     * Playes a single turn for a player
      * 
      * @param player - the player to play the turn for
      * 
@@ -98,4 +74,5 @@ public:
      * @return - void
     */
     void play();
+
 };
