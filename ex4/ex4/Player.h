@@ -19,7 +19,7 @@ public:
     Player(const Player& other)=default;
     virtual ~Player()=default;
     Player& operator=(const Player&)=default;
-    virtual int getAttackStrength() const;
+    virtual int getAttackStrength() const = 0;
     void levelUp();
     void buff(int add_force);
     void heal(int add_hp);

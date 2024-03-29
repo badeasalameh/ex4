@@ -9,11 +9,8 @@ using std::string;
 
 class Warrior : public Player{
 public:
-Warrior(const string& name ,const string& behavior,int maxHP=100,int force=5): Player(name,"Warrior",behavior,maxHP,force){};
-    Warrior(const Warrior& WarriorPlayer): Player(WarriorPlayer) {};
-    Warrior& operator=(const Warrior& Wariorlayer) =default;
-     ~Warrior()=default;
-     virtual int getAttackStrength() const override;
+Warrior(const string& name ,const string& behavior,int maxHP=100,int force=5);
+     int getAttackStrength() const override;
 };
 
 

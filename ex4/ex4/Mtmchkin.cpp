@@ -1,30 +1,10 @@
-
 #include "Mtmchkin.h"
-#include "utilities.h"
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <sstream>
-#include "Players/Player.h"
-#include "Players/Warrior.h"
-#include "Players/Sorcerer.h"
-#include "Cards/Dragon.h"
-#include "Cards/Encounter.h"
-#include "Cards/Event.h"
-#include "Cards/Gang.h"
-#include "Cards/Giant.h"
-#include "Cards/Goblin.h"
-#include "Cards/PotionMerchant.h"
-#include "Cards/SolarEclipse.h"
-#include "Cards/InvalidCardsFile.h"
-#include "Players/InvalidPlayersFile.h"
-
-
-
 
 bool isCapital(std::string str) {
-    if(str[0]<='A' && str[0] <='Z')
-        return true ;
+    if(str[0]>='A' && str[0] <='Z')
+    {
+        return true;
+    }
     return false ;
 }
 
@@ -60,11 +40,11 @@ pair<int, shared_ptr<Player>> addPlayer(int k,const std::string& s1,const std::s
 
     if(s2=="Warrior") { return pair<int, shared_ptr<Player>>(k, shared_ptr<Player>(new Warrior(s1, s3)));}
 
-   else if(s2=="Sorcerer") {return pair<int, shared_ptr<Player>>(k, shared_ptr<Player>(new Sorcerer(s1, s3)));}
+    else if(s2=="Sorcerer") {return pair<int, shared_ptr<Player>>(k, shared_ptr<Player>(new Sorcerer(s1, s3)));}
 
-   else {
-       throw InvalidPlayersFile();
-   }
+    else {
+        throw InvalidPlayersFile();
+    }
 }
 
 
@@ -75,7 +55,7 @@ bool is_number(const std::string& str) {
         if (!std::isdigit(str[i]))
             return false;
     }
-return true ;
+    return true ;
 }
 
 
@@ -105,7 +85,7 @@ bool to_deal_with_gang(std::queue<std::string>& queue, int k, Gang& gang_to_inse
     if (k == 0 || queue.empty() ) {
         return true;
     }
-int size=queue.size();
+    int size=queue.size();
 
     if ( size < k) {
         return false ;
@@ -154,43 +134,43 @@ int size=queue.size();
 
 void check_and_put_cards(std::queue<std::string> temp_queue) {
 
- std::queue<std::shared_ptr<Card>> cards;
-       while (!temp_queue.empty() ) {
-            if (temp_queue.front() == "Dragon") {
-                cards.push(make_shared<Dragon>());
-                temp_queue.pop();
+    std::queue<std::shared_ptr<Card>> cards;
+    while (!temp_queue.empty() ) {
+        if (temp_queue.front() == "Dragon") {
+            cards.push(make_shared<Dragon>());
+            temp_queue.pop();
         }
- else if (temp_queue.front() == "PotionMerchant") {
-                cards.push(make_shared<PotionMerchant>());
-                temp_queue.pop();
-  }
+        else if (temp_queue.front() == "PotionMerchant") {
+            cards.push(make_shared<PotionMerchant>());
+            temp_queue.pop();
+        }
         else if (temp_queue.front() == "SolarEclipse") {
-                cards.push(make_shared<SolarEclipse>());
-                temp_queue.pop();
+            cards.push(make_shared<SolarEclipse>());
+            temp_queue.pop();
         }
 
         else if(temp_queue.front() == "Giant"){
-                cards.push(make_shared<Giant>());
-                temp_queue.pop();
-       }
-        else if (temp_queue.front() == "Goblin") {
-                cards.push(make_shared<Goblin>());
-                temp_queue.pop();
+            cards.push(make_shared<Giant>());
+            temp_queue.pop();
         }
-         else if(temp_queue.front()=="Gang") {
-             Gang* gang= new Gang;
-                temp_queue.pop();
-                if (is_number(temp_queue.front())) {
-                    int k = stoi(temp_queue.front());
-                    if (k >= 2) {
-                        temp_queue.pop();
-                        if(to_deal_with_gang(temp_queue, k,*gang)) {
-                            cards.push(make_shared<Gang>(*gang));
-                        }else throw InvalidCardsFile();
-                    } else throw InvalidCardsFile();
+        else if (temp_queue.front() == "Goblin") {
+            cards.push(make_shared<Goblin>());
+            temp_queue.pop();
+        }
+        else if(temp_queue.front()=="Gang") {
+            Gang* gang= new Gang;
+            temp_queue.pop();
+            if (is_number(temp_queue.front())) {
+                int k = stoi(temp_queue.front());
+                if (k >= 2) {
+                    temp_queue.pop();
+                    if(to_deal_with_gang(temp_queue, k,*gang)) {
+                        cards.push(make_shared<Gang>(*gang));
+                    }else throw InvalidCardsFile();
                 } else throw InvalidCardsFile();
             } else throw InvalidCardsFile();
-   }
+        } else throw InvalidCardsFile();
+    }
 }
 
 using std::string;
@@ -233,8 +213,8 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
             k++;
         } else {throw InvalidPlayersFile();}
     }
-        /*============================================*/
-        this->m_turnIndex = 1;
+    /*============================================*/
+    this->m_turnIndex = 1;
 
 }
 
@@ -419,43 +399,43 @@ void Mtmchkin::playRound() {
     }
 }
 
-    bool Mtmchkin::isGameOver() const {
-        /*===== TODO: Implement the game over condition =====*/
-       int size=m_leaderboard.size();
-        if(m_numOfWinners > 0 || m_numOfLosers == size)
-        {
-            return true;
-        }
-        return false; // Replace this line
-        /*===================================================*/
+bool Mtmchkin::isGameOver() const {
+    /*===== TODO: Implement the game over condition =====*/
+    int size=m_leaderboard.size();
+    if(m_numOfWinners > 0 || m_numOfLosers == size)
+    {
+        return true;
+    }
+    return false; // Replace this line
+    /*===================================================*/
+}
+
+void Mtmchkin::play() {
+    printStartMessage();
+    /*===== TODO: Print start message entry for each player using "printStartPlayerEntry" =====*/
+    int playerIndex = 1;
+    for(auto& player : m_players)
+    {
+        printStartPlayerEntry(playerIndex , *player.second);
+        playerIndex++;
+    }
+    /*=========================================================================================*/
+    printBarrier();
+
+    while (!isGameOver()) {
+        playRound();
     }
 
-    void Mtmchkin::play() {
-            printStartMessage();
-            /*===== TODO: Print start message entry for each player using "printStartPlayerEntry" =====*/
-            int playerIndex = 1;
-            for(auto& player : m_players)
-            {
-                printStartPlayerEntry(playerIndex , *player.second);
-                playerIndex++;
-            }
-            /*=========================================================================================*/
-            printBarrier();
-
-            while (!isGameOver()) {
-                playRound();
-            }
-
-            printGameOver();
-            /*===== TODO: Print either a "winner" message or "no winner" message =====*/
-            if(m_numOfWinners > 0)
-            {
-                auto it = m_leaderboard.begin();
-                const shared_ptr<Player>& winner = *it;
-                printWinner(*winner);
-            }
-            else
-            {
-                printNoWinners();
-            }
+    printGameOver();
+    /*===== TODO: Print either a "winner" message or "no winner" message =====*/
+    if(m_numOfWinners > 0)
+    {
+        auto it = m_leaderboard.begin();
+        const shared_ptr<Player>& winner = *it;
+        printWinner(*winner);
     }
+    else
+    {
+        printNoWinners();
+    }
+}
