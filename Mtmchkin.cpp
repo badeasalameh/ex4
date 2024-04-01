@@ -93,7 +93,7 @@ std::queue<std::string> read_file_to_queue(const std::string& filename) {
     std::queue<std::string> string_queue;
 
     if (!file.is_open()) {
-        throw "Invalid Cards File"; // Return an empty queue
+        throw InvalidCardsFile(); // Return an empty queue
     }
     std::string line;
     // Read each line from the file
@@ -110,103 +110,293 @@ std::queue<std::string> read_file_to_queue(const std::string& filename) {
 }
 
 
+//bool to_deal_with_gang(std::queue<std::string>& queue, int k, Gang& gang_to_insert) {
+//    if (k == 0 || queue.empty()) {
+//        return true;
+//    }
+//
+//    int size = (int) (queue.size());
+//
+//    if (size < k) {
+//        return false;
+//    }
+//
+//    if (queue.front() != "Goblin" && queue.front() != "Giant" && queue.front() != "Dragon" && queue.front() != "Gang") {
+//        throw InvalidCardsFile();
+//    }
+//
+//    if (queue.front() == "Goblin" || queue.front() == "Giant" || queue.front() == "Dragon") {
+//        k--;
+//        // Create appropriate entity and insert into gang
+//        if (queue.front() == "Goblin") {
+//            auto *goblin = new Goblin();
+//            gang_to_insert.insertGangMember(goblin);
+//            queue.pop();
+//
+//        } else if (queue.front() == "Giant") {
+//            auto *giant = new Giant();
+//            gang_to_insert.insertGangMember(giant);
+//            queue.pop();
+//
+//        } else if (queue.front() == "Dragon") {
+//            auto *dragon = new Dragon();
+//            gang_to_insert.insertGangMember(dragon);
+//            queue.pop();
+//
+//        }
+//        return to_deal_with_gang(queue, k, gang_to_insert);
+//    }
+//
+//    if (queue.front() == "Gang") {
+//        queue.pop();
+//        size = (int) (queue.size());
+//        if (is_number(queue.front())) {
+//            int gang_size = std::stoi(queue.front());
+//            if (gang_size < 2 || size < gang_size) {
+//                throw InvalidCardsFile();
+//            } else {
+//                queue.pop();
+//                Gang *new_gang = new Gang;
+//                k--;
+//                if (to_deal_with_gang(queue, gang_size, *new_gang)) {
+//                    gang_to_insert.insertGangMember(new_gang);
+//                }
+//            }
+//        } else return false;
+//    } else return false;
+//    return to_deal_with_gang(queue, k, gang_to_insert);
+//}
 bool to_deal_with_gang(std::queue<std::string>& queue, int k, Gang& gang_to_insert) {
-    if (k == 0 || queue.empty() ) {
+    if (k == 0 || queue.empty()) {
         return true;
     }
 
-int size=(int) (queue.size());
+    int size = static_cast<int>(queue.size());
 
-    if ( size < k) {
-        return false ;
+    if (size < k) {
+        return false;
     }
+
+    if (queue.front() != "Goblin" && queue.front() != "Giant" && queue.front() != "Dragon" && queue.front() != "Gang") {
+        throw InvalidCardsFile();
+    }
+
     if (queue.front() == "Goblin" || queue.front() == "Giant" || queue.front() == "Dragon") {
         k--;
         // Create appropriate entity and insert into gang
         if (queue.front() == "Goblin") {
-            auto* goblin = new Goblin();
-            gang_to_insert.insertGangMember(goblin);
+            std::shared_ptr<Goblin> goblin = std::make_shared<Goblin>();
+            gang_to_insert.insertGangMember(goblin.get());
             queue.pop();
 
         } else if (queue.front() == "Giant") {
-            auto* giant = new Giant();
-            gang_to_insert.insertGangMember(giant);
+            std::shared_ptr<Giant> giant = std::make_shared<Giant>();
+            gang_to_insert.insertGangMember(giant.get());
             queue.pop();
 
         } else if (queue.front() == "Dragon") {
-            auto* dragon = new Dragon();
-            gang_to_insert.insertGangMember(dragon);
+            std::shared_ptr<Dragon> dragon = std::make_shared<Dragon>();
+            gang_to_insert.insertGangMember(dragon.get());
             queue.pop();
-
         }
         return to_deal_with_gang(queue, k, gang_to_insert);
     }
 
-    if (queue.front() == "Gang" && queue.front()!="Goblin" && queue.front()!="Giant" && queue.front()!="Dragon") {
+    if (queue.front() == "Gang") {
         queue.pop();
-        size=(int)(queue.size());
+        size = static_cast<int>(queue.size());
         if (is_number(queue.front())) {
             int gang_size = std::stoi(queue.front());
             if (gang_size < 2 || size < gang_size) {
                 throw InvalidCardsFile();
             } else {
                 queue.pop();
-                Gang* new_gang = new Gang;
+//                std::unique_ptr<Gang> new_gang(new Gang);
+                std::shared_ptr<Gang> new_gang = std::make_shared<Gang>();
+
                 k--;
-                if (to_deal_with_gang(queue, gang_size, *new_gang))
-                    gang_to_insert.insertGangMember(new_gang);
+                if (to_deal_with_gang(queue, gang_size, *new_gang)) {
+                    gang_to_insert.insertGangMember(new_gang.get());
+                }
             }
         } else return false;
     } else return false;
-    return to_deal_with_gang(queue,k,gang_to_insert);
+
+    return to_deal_with_gang(queue, k, gang_to_insert);
 }
 
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+bool check_to_deal_with_gang(std::queue<std::string>& queue, int k) {
+    if (k == 0 || queue.empty()) {
+        return true;
+    }
 
-std::queue <std::shared_ptr<Card>>  check_and_put_cards(std::queue<std::string> temp_queue) {
+    int size = static_cast<int>(queue.size());
 
- std::queue<std::shared_ptr<Card>> cards;
-       while (!temp_queue.empty() ) {
-            if (temp_queue.front() == "Dragon") {
-                cards.push(make_shared<Dragon>());
-                temp_queue.pop();
-        }
- else if (temp_queue.front() == "PotionsMerchant") {
-                cards.push(make_shared<PotionMerchant>());
-                temp_queue.pop();
-  }
-        else if (temp_queue.front() == "SolarEclipse") {
-                cards.push(make_shared<SolarEclipse>());
-                temp_queue.pop();
-        }
+    if (size < k) {
+        return false;
+    }
 
-        else if(temp_queue.front() == "Giant"){
-                cards.push(make_shared<Giant>());
-                temp_queue.pop();
-       }
-        else if (temp_queue.front() == "Goblin") {
-                cards.push(make_shared<Goblin>());
-                temp_queue.pop();
+    if (queue.front() != "Goblin" && queue.front() != "Giant" && queue.front() != "Dragon" && queue.front() != "Gang") {
+        throw InvalidCardsFile();
+    }
+
+    if (queue.front() == "Goblin" || queue.front() == "Giant" || queue.front() == "Dragon") {
+        k--;
+        // Create appropriate entity and insert into gang
+        if (queue.front() == "Goblin") {
+            queue.pop();
+
+        } else if (queue.front() == "Giant") {
+            queue.pop();
+
+        } else if (queue.front() == "Dragon") {
+            queue.pop();
         }
-         else if(temp_queue.front()=="Gang") {
-             Gang* gang= new Gang;
-                temp_queue.pop();
-                if (is_number(temp_queue.front())) {
-                    int k = stoi(temp_queue.front());
-                    if (k >= 2) {
-                        temp_queue.pop();
-                        if(to_deal_with_gang(temp_queue, k,*gang)) {
-                            cards.push(make_shared<Gang>(*gang));
-                        }else throw InvalidCardsFile();
-                    } else throw InvalidCardsFile();
-                } else throw InvalidCardsFile();
-            } else throw InvalidCardsFile();
-   }
-       return cards;
+        return check_to_deal_with_gang(queue, k);
+    }
+
+    if (queue.front() == "Gang") {
+        queue.pop();
+        size = static_cast<int>(queue.size());
+        if (is_number(queue.front())) {
+            int gang_size = std::stoi(queue.front());
+            if (gang_size < 2 || size < gang_size) {
+                throw InvalidCardsFile();
+            } else {
+                queue.pop();
+//                std::unique_ptr<Gang> new_gang(new Gang);
+
+                k--;
+                if (check_to_deal_with_gang(queue, gang_size)) {
+                }
+            }
+        } else return false;
+    } else return false;
+
+    return check_to_deal_with_gang(queue, k);
 }
+//std::queue <std::shared_ptr<Card>>  check_and_put_cards(std::queue<std::string> temp_queue) {
+//
+// std::queue<std::shared_ptr<Card>> cards;
+//       while (!temp_queue.empty() ) {
+//            if (temp_queue.front() == "Dragon") {
+//                cards.push(make_shared<Dragon>());
+//                temp_queue.pop();
+//        }
+// else if (temp_queue.front() == "PotionsMerchant") {
+//                cards.push(make_shared<PotionMerchant>());
+//                temp_queue.pop();
+//  }
+//        else if (temp_queue.front() == "SolarEclipse") {
+//                cards.push(make_shared<SolarEclipse>());
+//                temp_queue.pop();
+//        }
+//
+//        else if(temp_queue.front() == "Giant"){
+//                cards.push(make_shared<Giant>());
+//                temp_queue.pop();
+//       }
+//        else if (temp_queue.front() == "Goblin") {
+//                cards.push(make_shared<Goblin>());
+//                temp_queue.pop();
+//        }
+//         else if(temp_queue.front()=="Gang") {
+//                temp_queue.pop();
+//                if (is_number(temp_queue.front())) {
+//                    int k = stoi(temp_queue.front());
+//                    if (k >= 2) {
+//                        temp_queue.pop();
+//                        std::shared_ptr<Gang> gang = std::make_shared<Gang>();
+//                        if(to_deal_with_gang(temp_queue, k,*gang)) {
+//                            cards.push(make_shared<Gang>(*gang));
+//                        }else throw InvalidCardsFile();
+//                    } else throw InvalidCardsFile();
+//                } else throw InvalidCardsFile();
+//            } else throw InvalidCardsFile();
+//   }
+//       return cards;
+//}
 
+bool checkCards(std::queue<std::string> temp_queue) {
+    while (!temp_queue.empty()) {
+        if (temp_queue.front() == "Dragon") {
+            temp_queue.pop();
+        } else if (temp_queue.front() == "PotionsMerchant") {
+            temp_queue.pop();
+        } else if (temp_queue.front() == "SolarEclipse") {
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Giant") {
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Goblin") {
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Gang") {
+            temp_queue.pop();
+            if (is_number(temp_queue.front())) {
+                int k = std::stoi(temp_queue.front());
+                if (k >= 2) {
+                    temp_queue.pop();
+                    if (check_to_deal_with_gang(temp_queue, k)) {
+                    } else {
+                        throw InvalidCardsFile();
+                    }
+                } else {
+                    throw InvalidCardsFile();
+                }
+            } else {
+                throw InvalidCardsFile();
+            }
+        } else {
+            throw InvalidCardsFile();
+        }
+    }
+    return true;
+}
+std::queue<std::shared_ptr<Card>> check_and_put_cards(std::queue<std::string> temp_queue) {
+    std::queue<std::shared_ptr<Card>> cards;
+    while (!temp_queue.empty()) {
+        if (temp_queue.front() == "Dragon") {
+            cards.push(std::make_shared<Dragon>());
+            temp_queue.pop();
+        } else if (temp_queue.front() == "PotionsMerchant") {
+            cards.push(std::make_shared<PotionMerchant>());
+            temp_queue.pop();
+        } else if (temp_queue.front() == "SolarEclipse") {
+            cards.push(std::make_shared<SolarEclipse>());
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Giant") {
+            cards.push(std::make_shared<Giant>());
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Goblin") {
+            cards.push(std::make_shared<Goblin>());
+            temp_queue.pop();
+        } else if (temp_queue.front() == "Gang") {
+            temp_queue.pop();
+            if (is_number(temp_queue.front())) {
+                int k = std::stoi(temp_queue.front());
+                if (k >= 2) {
+                    temp_queue.pop();
+                    std::shared_ptr<Gang> new_gang = std::make_shared<Gang>();
+                    if (to_deal_with_gang(temp_queue, k, *new_gang)) {
+                        cards.push(new_gang);
+                    } else {
+                        throw InvalidCardsFile();
+                    }
+                } else {
+                    throw InvalidCardsFile();
+                }
+            } else {
+                throw InvalidCardsFile();
+            }
+        } else {
+            throw InvalidCardsFile();
+        }
+    }
+    return cards;
+}
 using std::string;
 
 Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
@@ -218,18 +408,22 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
         throw InvalidCardsFile();
     }
     std::string card;
-    std::queue<std::string> queue;
+    std::queue<std::string> temp_queue;
     using std::istringstream;
     std::string line;
 
     while (std::getline(deckFile, line)) {
         std::istringstream iss(line);
         while (iss >> card) {
-            queue.push(card);
+            temp_queue.push(card);
         }
     }
-
-    m_cards=check_and_put_cards(queue);
+if(temp_queue.size() <2) {
+    throw InvalidCardsFile();
+}
+    std::queue<std::string> queue=temp_queue;
+if(checkCards(temp_queue))
+{m_cards=check_and_put_cards(queue);}
 
     deckFile.close();
     /*==========================================*/
@@ -271,6 +465,7 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) {
         }
         /*============================================*/
         tot_num_players=(int)(m_players.size());
+        if(tot_num_players < 2 || tot_num_players > 6) { throw InvalidPlayersFile();}
         this->m_turnIndex = 1;
 
 }
@@ -323,7 +518,7 @@ void Mtmchkin::playTurn(Player& player) {
             //GIANT WIN:
             if(giantCard -> getCombatPower() >= player.getAttackStrength())
             {
-                player.damage(goblinCard -> getDamage());
+                player.damage(giantCard -> getDamage());
                 printTurnOutcome(getEncounterLostMessage(player , giantCard -> getDamage()));
             }
                 //PLAYER WIN:
@@ -349,13 +544,11 @@ void Mtmchkin::playTurn(Player& player) {
                 //PLAYER WIN:
             else
             {
-
                 player.addCoins(goblinCard -> getLoot());
                 player.levelUp();
                 printTurnOutcome(getEncounterWonMessage(player , goblinCard -> getLoot()));
             }
         }
-
             //GANG
         else if (gangCard)
         {
@@ -381,8 +574,9 @@ void Mtmchkin::playTurn(Player& player) {
         shared_ptr<SolarEclipse> solarEclipseCard = dynamic_pointer_cast<SolarEclipse>(eventCard);
         shared_ptr<PotionMerchant> potionMerchantCard = dynamic_pointer_cast<PotionMerchant>(eventCard);
 
-        auto* warriorPlayer = dynamic_cast<Warrior*>(&player);
-        auto* sorcererPlayer = dynamic_cast<Sorcerer*>(&player);
+        //used auto instead of auto*:
+        auto warriorPlayer = dynamic_cast<Warrior*>(&player);
+        auto sorcererPlayer = dynamic_cast<Sorcerer*>(&player);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //SOLARECLIPSE:
@@ -412,7 +606,7 @@ void Mtmchkin::playTurn(Player& player) {
                 potionsBought++;
             }
                 //PLAYER IS RESPONSIBLE:
-            else if(player.getBehavior() == "Warrior" && player.getHealthPoints() < player.getMaxHealthPoints())
+            else if(player.getBehavior() == "Responsible" && player.getHealthPoints() < player.getMaxHealthPoints())
             {
                 while(player.pay(POTION_COST) && (player.getHealthPoints() < player.getMaxHealthPoints()))
                 {
@@ -514,5 +708,6 @@ void Mtmchkin::play() {
             {
                 printNoWinners();
             }
+
     }
 

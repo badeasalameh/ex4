@@ -13,7 +13,6 @@ protected:
     int m_damage;
 public:
     Encounter(int combatPower , int loot , int damage);
-
      int getCombatPower() const;
      int getLoot() const;
      int getDamage() const;

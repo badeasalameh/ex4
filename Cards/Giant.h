@@ -10,6 +10,7 @@
 class Giant : public Encounter {
 public:
     Giant();
+    ~Giant() override =default;
     std::string getDescription() const;
 
 };

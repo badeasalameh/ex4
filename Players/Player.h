@@ -67,8 +67,9 @@ bool pay(int cost);
     int getCoins() const;
 
 private :
-static const int INITIAL_LEVEL=1;
-friend bool operator<(const Player&,const Player&);
+
+    friend bool operator<(const Player&,const Player&);
+
 protected:
 string m_name ;
 string m_job;

@@ -16,5 +16,5 @@
 class Goblin : public Encounter{
 public:
     Goblin();
-    string getDescription() const;
+    string getDescription() const override ;
 };

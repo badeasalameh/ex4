@@ -10,7 +10,7 @@
 class Sorcerer : public Player{
 public:
     Sorcerer(const string& name ,const string& behavior,int maxHP=100,int force=5): Player(name,"Sorcerer",behavior,maxHP,force){}
-    Sorcerer(const Sorcerer& sorcerer): Player(sorcerer) {}
+    Sorcerer(const Sorcerer& sorcerer): Player(sorcerer)  {}
     Sorcerer& operator=(const Sorcerer& sorcerer) =default;
     ~Sorcerer()override=default;
     int getAttackStrength() const override;
